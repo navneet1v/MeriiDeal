@@ -4,15 +4,14 @@
 	*/
 	class City {
 		
-		public $cityId;
-		public $cityName;
-		public $cityState;
-		public $cityPincode;
+		public $id;
+		public $name;
+		public $state;
+		public $pincode;
+        public $country;
 		
 		function __construct() {
 			// empty constructor
 		}
 	}
-
-	$city = new City();
 ?>

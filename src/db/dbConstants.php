@@ -1,8 +1,21 @@
 <?php
-	// This is the name of some Constants of the Database .. :)
-	define('DB_USER', "root"); // db user
-	define('DB_PASSWORD', "mysql"); // db password (mention your db password here)
-	define('DB_DATABASE_USERS', "Users"); // database name customers
-	define('DB_DATABASE_BUSINESS', "businessInformation");
-	define('DB_SERVER', "localhost"); // db server
+
+    require_once '../../vendor/autoload.php';
+    date_default_timezone_set('UTC');
+
+    define('CITY_TABLE', "city");
+    define('USER_TABLE', "users");
+    define('STORE_TABLE', "stores");
+    define('VOUCHER_TABLE', "voucher");
+    define('NOTIFICATION_TABLE', "notification");
+
+    $awsSDK = new Aws\Sdk([
+        'endpoint' => 'http://localhost:8000',
+        'region' => 'us-west-2',
+        'version' => 'latest'
+    ]);
+
+    foreach (glob("../model/*.php") as $filename) {
+        require_once $filename;
+    }
 ?>
