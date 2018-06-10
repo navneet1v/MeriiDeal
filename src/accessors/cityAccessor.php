@@ -1,5 +1,5 @@
 <?php
-    require_once( "../db/dbConstants.php" );
+    require_once( __DIR__ . "/../db/dbConstants.php" );
 
     use Aws\DynamoDb\Exception\DynamoDbException;
     use Aws\DynamoDb\Marshaler;

@@ -1,6 +1,6 @@
 <?php
 
-    require_once '../../vendor/autoload.php';
+    require_once __DIR__ . '/../../vendor/autoload.php';
     date_default_timezone_set('UTC');
 
     define('CITY_TABLE', "city");
@@ -15,7 +15,7 @@
         'version' => 'latest'
     ]);
 
-    foreach (glob("../model/*.php") as $filename) {
+    foreach (glob(__DIR__ . "/../model/*.php") as $filename) {
         require_once $filename;
     }
 ?>

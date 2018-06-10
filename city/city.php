@@ -31,16 +31,14 @@
                         cityName: cityName,
                         state: state,
                         country: country
-                    },).done(function(data){
+                    }).done(function (data) {
                         var data = JSON.parse(data);
-                        console.log(data["message"]);
                         $("#cityAdditionMessage").text(data["message"]);
                         $("#cityAdditionAlertBox").show();
-                    }).fail(function(data){
+                    }).fail(function (data) {
                         $("#cityAdditionMessage").text("Fail to add city. Please try again");
                         $("#cityAdditionAlertBox").show();
                     });
-
             }
 
             // --------------------------------------------------------------------------------------- //
@@ -50,6 +48,51 @@
              */
             function getAllCities() {
                 console.log("Getting all the cities");
+                $.post("getAllCities.php").done(function (data) {
+                    var data = JSON.parse(data);
+                    var cities = data["cities"];
+                    callCreateTable(cities);
+                }).fail(function () {
+                    $("#cityAdditionMessage").text("Fail to Load the cities. Please try again.");
+                    $("#cityAdditionAlertBox").show();
+                });
+            }
+
+            function callCreateTable(cities) {
+                var tableArray = [];
+                tableArray.push(["#", "Name", "State", "Country"]);
+                for (var i = 0; i < cities.length; i++) {
+                    var cityArray = [];
+                    var country = cities[i]["country"];
+                    var state = cities[i]["state"];
+                    var name = cities[i]["name"];
+                    cityArray.push(i + 1);
+                    cityArray.push(name);
+                    cityArray.push(state);
+                    cityArray.push(country);
+                    tableArray.push(cityArray);
+                }
+                createTable(tableArray, "viewCityTable", ["table", "table-striped"]);
+            }
+
+            // --------------------------------------------------------------------------------------- //
+
+            /**
+             * This section is responsible for importing the things to Excel
+             */
+            $("#importToExcelButton").click(importToExcel);
+
+            function importToExcel() {
+                $.post("exportCities.php").done(function (data){
+                    var data = JSON.parse(data);
+                    var fileUrl = data["filename"];
+                    console.log(fileUrl + data);
+                    $("#cityAdditionMessage").html("File ready to download <a href=\'" + fileUrl + "\'>File Link</a>");
+                    $("#cityAdditionAlertBox").show();
+                }).fail(function(){
+                    $("#cityAdditionMessage").text("Failed To Export Cities. Please try again later.");
+                    $("#cityAdditionAlertBox").show();
+                });
             }
         });
 
@@ -64,7 +107,7 @@
         </div>
     </div>
 
-    <div class="alert alert-success alert-dismissible fade show hiddenStyle" id="cityAdditionAlertBox" role="alert">
+    <div class="alert alert-primary alert-dismissible fade show hiddenStyle" id="cityAdditionAlertBox" role="alert">
         <strong id="cityAdditionMessage"></strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -95,27 +138,13 @@
         </div>
 
         <div id="viewCity" class="container hiddenStyle col-md-6 col-md-offset-3">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">State</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Kaithal</td>
-                    <td>Haryana</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Kurukshetra</td>
-                    <td>Haryana</td>
-                </tr>
-                </tbody>
-            </table>
+            <div id="viewCityTable">
+            </div>
+            <div class="container col-md-6">
+                <button type="button" id="importToExcelButton" class="btn btn btn-success active">Import To Excel
+                </button>
+            </div>
+            <br>
         </div>
     </div>
 
